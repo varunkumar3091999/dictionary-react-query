@@ -6,7 +6,7 @@ import { getWordData } from "../apis";
 
 const Home = () => {
   const [word, setWord] = useState();
-  const [language, setLanguage] = useState();
+  const [language, setLanguage] = useState('en_US');
   const [wordData, setWordData] = useState({});
 
   const query = useQuery(["apiParams", { word, language }], () =>
@@ -28,19 +28,11 @@ const Home = () => {
     { label: "Turkish", value: "tr" },
   ];
 
-  useEffect(() => {
-    console.log(query.status);
-    // if (language && typeof word === "string") {
-    //   console.log(query);
-    //   if (query.data) {
-    //     setWordData(query.data);
-    //   }
-    // }
-  }, [word, language]);
 
   const formSubmit = (e) => {
     e.preventDefault()
     setWordData(query.data)
+    console.log('here')
   }
 
   return (
@@ -63,7 +55,7 @@ const Home = () => {
           {wordData && (
             <div>
               <h3>Meanings</h3>
-              {wordData[0].meanings.map(({ partOfSpeech, definitions }) => (
+              {wordData[0]?.meanings.map(({ partOfSpeech, definitions }) => (
                 <div>
                   <b>{partOfSpeech}</b>
                   {definitions.map((def) => (
@@ -76,7 +68,7 @@ const Home = () => {
               ))}
               <div>
                 <b>Origin</b>
-                <p>{wordData[0].origin}</p>
+                <p>{wordData[0]?.origin}</p>
               </div>
             </div>
           )}
