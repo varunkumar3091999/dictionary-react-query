@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
 
@@ -6,12 +6,15 @@ import { getWordData } from "../apis";
 
 const Home = () => {
   const [word, setWord] = useState();
-  const [language, setLanguage] = useState('en_US');
+  const [language, setLanguage] = useState("en_US");
   const [wordData, setWordData] = useState({});
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const query = useQuery(["apiParams", { word, language }], () =>
     getWordData({ word, language })
   );
+
+  const inputRef = useRef(null);
 
   const options = [
     { label: "English(US)", value: "en_US" },
@@ -28,17 +31,28 @@ const Home = () => {
     { label: "Turkish", value: "tr" },
   ];
 
-
   const formSubmit = (e) => {
-    e.preventDefault()
-    setWordData(query.data)
-    console.log('here')
-  }
+    e.preventDefault();
+    setFormSubmitted(true);
+    setWordData(query.data);
+  };
+
+  const clearForm = () => {
+    setFormSubmitted(false);
+    inputRef.current.value = "";
+  };
 
   return (
     <div style={({ display: "flex" }, { width: "75vw" })}>
       <form onSubmit={(e) => formSubmit(e)}>
-        <input onChange={(e) => setWord(e.target.value)} required/>
+        <input
+          onChange={(e) => {
+            setWord(e.target.value)
+            setFormSubmitted(false)
+          }}
+          required
+          ref={inputRef}
+        />
         <div style={{ width: "50%" }}>
           <Select
             options={options}
@@ -48,8 +62,12 @@ const Home = () => {
           />
         </div>
         <button type="submit">Search</button>
+        <button type="button" onClick={() => clearForm()}>
+          Clear
+        </button>
         {console.log(wordData)}
       </form>
+      {formSubmitted && <>
       {query.status === "success" ? (
         <>
           {wordData && (
@@ -76,6 +94,7 @@ const Home = () => {
       ) : (
         <p>Loading</p>
       )}
+      </>}
     </div>
   );
 };
