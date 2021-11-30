@@ -1,8 +1,5 @@
 import { useRef, useState } from "react";
-import { useQuery } from "react-query";
 import Select from "react-select";
-
-import { getWordData } from "../apis";
 
 const Home = () => {
   const [word, setWord] = useState();
@@ -10,12 +7,10 @@ const Home = () => {
     label: "English(US)",
     value: "en_US",
   });
-  const [wordData, setWordData] = useState({});
   const [formSubmitted, setFormSubmitted] = useState(false);
-
-  const query = useQuery(["apiParams", { word, language }], () =>
-    getWordData({ word, language: language.value })
-  );
+  const [query, setQuery] = useState();
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -34,10 +29,33 @@ const Home = () => {
     { label: "Turkish", value: "tr" },
   ];
 
-  const formSubmit = (e) => {
+  const formSubmit = async (e) => {
     e.preventDefault();
+    console.log("submit");
     setFormSubmitted(true);
-    setWordData(query.data);
+    setLoading(true);
+
+    try {
+      await fetch(
+        `https://api.dictionaryapi.dev/api/v2/entries/${language.value}/${word}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.title === "No Definitions Found") {
+            setError(data);
+            setQuery({});
+          } else {
+            setError(null);
+            setQuery(data);
+          }
+          setLoading(false);
+        });
+    } catch (err) {
+      console.log("here");
+      setError(err);
+      setLoading(false);
+    }
   };
 
   const clearForm = () => {
@@ -55,10 +73,12 @@ const Home = () => {
           <input
             onChange={(e) => {
               setWord(e.target.value);
+              setQuery(undefined);
               setFormSubmitted(false);
             }}
             required
             className="h-10 border-2 w-3/4 1sm:w-full focus:border-indigo-500"
+            onFocus={(e) => e.target.select()}
             ref={inputRef}
           />
           <div className="w-1/4 mx-2 1sm:w-full 1sm:mx-0 1sm:mt-2">
@@ -90,27 +110,28 @@ const Home = () => {
       <div className="w-2/3 1sm:w-11/12 mx-auto">
         {formSubmitted && (
           <div>
-            {query.status === "success" ? (
+            {console.log(loading)}
+            {loading && <p>Loading...</p>}
+            {query?.length > 0 ? (
               <>
-                {wordData && (
+                {console.log(query)}
+                {query && (
                   <div>
                     <h3>Meanings</h3>
-                    {wordData[0]?.meanings.map(
-                      ({ partOfSpeech, definitions }) => (
-                        <div>
-                          <b>{partOfSpeech}</b>
-                          {definitions.map((def) => (
-                            <>
-                              <div>~{def.definition}</div>
-                              {def.example && <div>Ex: {def.example}</div>}
-                            </>
-                          ))}
-                        </div>
-                      )
-                    )}
+                    {query[0]?.meanings.map(({ partOfSpeech, definitions }) => (
+                      <div>
+                        <b>{partOfSpeech}</b>
+                        {definitions.map((def) => (
+                          <>
+                            <div>~{def.definition}</div>
+                            {def.example && <div>Ex: {def.example}</div>}
+                          </>
+                        ))}
+                      </div>
+                    ))}
                     <div>
                       <b>Origin</b>
-                      <p>{wordData[0]?.origin}</p>
+                      <p>{query[0]?.origin}</p>
                       <p className="text-center">***</p>
                     </div>
                   </div>
@@ -118,11 +139,8 @@ const Home = () => {
               </>
             ) : (
               <>
-                {query.status === "error" ? (
-                  <p>Error loading data.</p>
-                ) : (
-                  <p>Loading...</p>
-                )}
+                {console.log(error)}
+                {error && <p>{error.message}</p>}
               </>
             )}
           </div>
