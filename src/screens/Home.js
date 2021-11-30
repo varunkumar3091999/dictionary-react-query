@@ -74,6 +74,7 @@ const Home = () => {
             onChange={(e) => {
               setWord(e.target.value);
               setQuery(undefined);
+              setError(undefined);
               setFormSubmitted(false);
             }}
             required
