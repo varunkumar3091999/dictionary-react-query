@@ -43,28 +43,43 @@ const Home = () => {
   };
 
   return (
-    <div style={({ display: "flex" }, { width: "75vw" })} className="">
-      <form onSubmit={(e) => formSubmit(e)}>
-        <input
-          onChange={(e) => {
-            setWord(e.target.value);
-            setFormSubmitted(false);
-          }}
-          required
-          ref={inputRef}
-        />
-        <div style={{ width: "50%" }}>
-          <Select
-            options={options}
-            onChange={(lang) => setLanguage(lang.value)}
-            value={options[0]}
+    <div className="w-">
+      <form onSubmit={(e) => formSubmit(e)} className="w-2/3 mx-auto mt-10">
+        <div className="flex">
+          <input
+            onChange={(e) => {
+              setWord(e.target.value);
+              setFormSubmitted(false);
+            }}
             required
+            className="h-10 border-2 w-3/4 focus:border-indigo-500"
+            ref={inputRef}
           />
+          <div className="w-1/4 mx-2 ">
+            <Select
+              options={options}
+              onChange={(lang) => setLanguage(lang.value)}
+              value={options[0]}
+              required
+              className="h-10"
+            />
+          </div>
         </div>
-        <button type="submit">Search</button>
-        <button type="button" onClick={() => clearForm()}>
-          Clear
-        </button>
+        <div className="my-5 flex justify-start">
+          <button
+            type="submit"
+            className="bg-indigo-500 text-white px-3 py-1 shadow-lg"
+          >
+            Search
+          </button>
+          <button
+            type="button"
+            onClick={() => clearForm()}
+            className="mx-3 border px-3 py-1 shadow-lg text-indigo-500"
+          >
+            Clear
+          </button>
+        </div>
         {console.log(query)}
       </form>
       {formSubmitted && (
@@ -72,7 +87,7 @@ const Home = () => {
           {query.status === "success" ? (
             <>
               {wordData && (
-                <div>
+                <div className="w-2/3 mx-auto">
                   <h3>Meanings</h3>
                   {wordData[0]?.meanings.map(
                     ({ partOfSpeech, definitions }) => (

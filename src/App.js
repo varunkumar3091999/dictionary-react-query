@@ -3,7 +3,7 @@ import "./index.css";
 
 function App() {
   return (
-    <div className="App" style={{ padding: "10rem" }}>
+    <div className="App h-screen w-screen">
       <Home />
     </div>
   );
