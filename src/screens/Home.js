@@ -44,18 +44,21 @@ const Home = () => {
 
   return (
     <div className="w-">
-      <form onSubmit={(e) => formSubmit(e)} className="w-2/3 mx-auto mt-10">
-        <div className="flex">
+      <form
+        onSubmit={(e) => formSubmit(e)}
+        className="w-2/3 1sm:w-11/12 mx-auto mt-10"
+      >
+        <div className="flex 1sm:flex-col">
           <input
             onChange={(e) => {
               setWord(e.target.value);
               setFormSubmitted(false);
             }}
             required
-            className="h-10 border-2 w-3/4 focus:border-indigo-500"
+            className="h-10 border-2 w-3/4 1sm:w-full focus:border-indigo-500"
             ref={inputRef}
           />
-          <div className="w-1/4 mx-2 ">
+          <div className="w-1/4 mx-2 1sm:w-full 1sm:mx-0 1sm:mt-2">
             <Select
               options={options}
               onChange={(lang) => setLanguage(lang.value)}
@@ -87,7 +90,7 @@ const Home = () => {
           {query.status === "success" ? (
             <>
               {wordData && (
-                <div className="w-2/3 mx-auto">
+                <div className="w-2/3 1sm:w-11/12 mx-auto">
                   <h3>Meanings</h3>
                   {wordData[0]?.meanings.map(
                     ({ partOfSpeech, definitions }) => (
@@ -105,6 +108,7 @@ const Home = () => {
                   <div>
                     <b>Origin</b>
                     <p>{wordData[0]?.origin}</p>
+                    <p className="text-center">***</p>
                   </div>
                 </div>
               )}
