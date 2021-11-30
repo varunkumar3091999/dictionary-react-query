@@ -47,8 +47,8 @@ const Home = () => {
       <form onSubmit={(e) => formSubmit(e)}>
         <input
           onChange={(e) => {
-            setWord(e.target.value)
-            setFormSubmitted(false)
+            setWord(e.target.value);
+            setFormSubmitted(false);
           }}
           required
           ref={inputRef}
@@ -65,36 +65,46 @@ const Home = () => {
         <button type="button" onClick={() => clearForm()}>
           Clear
         </button>
-        {console.log(wordData)}
+        {console.log(query)}
       </form>
-      {formSubmitted && <>
-      {query.status === "success" ? (
+      {formSubmitted && (
         <>
-          {wordData && (
-            <div>
-              <h3>Meanings</h3>
-              {wordData[0]?.meanings.map(({ partOfSpeech, definitions }) => (
+          {query.status === "success" ? (
+            <>
+              {wordData && (
                 <div>
-                  <b>{partOfSpeech}</b>
-                  {definitions.map((def) => (
-                    <>
-                      <div>~{def.definition}</div>
-                      {def.example && <div>Ex: {def.example}</div>}
-                    </>
-                  ))}
+                  <h3>Meanings</h3>
+                  {wordData[0]?.meanings.map(
+                    ({ partOfSpeech, definitions }) => (
+                      <div>
+                        <b>{partOfSpeech}</b>
+                        {definitions.map((def) => (
+                          <>
+                            <div>~{def.definition}</div>
+                            {def.example && <div>Ex: {def.example}</div>}
+                          </>
+                        ))}
+                      </div>
+                    )
+                  )}
+                  <div>
+                    <b>Origin</b>
+                    <p>{wordData[0]?.origin}</p>
+                  </div>
                 </div>
-              ))}
-              <div>
-                <b>Origin</b>
-                <p>{wordData[0]?.origin}</p>
-              </div>
-            </div>
+              )}
+            </>
+          ) : (
+            <>
+              {query.status === "error" ? (
+                <p>Error loading data.</p>
+              ) : (
+                <p>Loading</p>
+              )}
+            </>
           )}
         </>
-      ) : (
-        <p>Loading</p>
       )}
-      </>}
     </div>
   );
 };
