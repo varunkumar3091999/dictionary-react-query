@@ -87,45 +87,47 @@ const Home = () => {
           </button>
         </div>
       </form>
-      {formSubmitted && (
-        <>
-          {query.status === "success" ? (
-            <>
-              {wordData && (
-                <div className="w-2/3 1sm:w-11/12 mx-auto">
-                  <h3>Meanings</h3>
-                  {wordData[0]?.meanings.map(
-                    ({ partOfSpeech, definitions }) => (
-                      <div>
-                        <b>{partOfSpeech}</b>
-                        {definitions.map((def) => (
-                          <>
-                            <div>~{def.definition}</div>
-                            {def.example && <div>Ex: {def.example}</div>}
-                          </>
-                        ))}
-                      </div>
-                    )
-                  )}
+      <div className="w-2/3 1sm:w-11/12 mx-auto">
+        {formSubmitted && (
+          <div>
+            {query.status === "success" ? (
+              <>
+                {wordData && (
                   <div>
-                    <b>Origin</b>
-                    <p>{wordData[0]?.origin}</p>
-                    <p className="text-center">***</p>
+                    <h3>Meanings</h3>
+                    {wordData[0]?.meanings.map(
+                      ({ partOfSpeech, definitions }) => (
+                        <div>
+                          <b>{partOfSpeech}</b>
+                          {definitions.map((def) => (
+                            <>
+                              <div>~{def.definition}</div>
+                              {def.example && <div>Ex: {def.example}</div>}
+                            </>
+                          ))}
+                        </div>
+                      )
+                    )}
+                    <div>
+                      <b>Origin</b>
+                      <p>{wordData[0]?.origin}</p>
+                      <p className="text-center">***</p>
+                    </div>
                   </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              {query.status === "error" ? (
-                <p>Error loading data.</p>
-              ) : (
-                <p>Loading</p>
-              )}
-            </>
-          )}
-        </>
-      )}
+                )}
+              </>
+            ) : (
+              <>
+                {query.status === "error" ? (
+                  <p>Error loading data.</p>
+                ) : (
+                  <p>Loading...</p>
+                )}
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
