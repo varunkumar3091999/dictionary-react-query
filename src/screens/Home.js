@@ -43,7 +43,7 @@ const Home = () => {
   };
 
   return (
-    <div style={({ display: "flex" }, { width: "75vw" })}>
+    <div style={({ display: "flex" }, { width: "75vw" })} className="">
       <form onSubmit={(e) => formSubmit(e)}>
         <input
           onChange={(e) => {
