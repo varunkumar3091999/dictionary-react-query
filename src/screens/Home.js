@@ -6,12 +6,15 @@ import { getWordData } from "../apis";
 
 const Home = () => {
   const [word, setWord] = useState();
-  const [language, setLanguage] = useState("en_US");
+  const [language, setLanguage] = useState({
+    label: "English(US)",
+    value: "en_US",
+  });
   const [wordData, setWordData] = useState({});
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const query = useQuery(["apiParams", { word, language }], () =>
-    getWordData({ word, language })
+    getWordData({ word, language: language.value })
   );
 
   const inputRef = useRef(null);
@@ -58,13 +61,15 @@ const Home = () => {
             className="h-10 border-2 w-3/4 1sm:w-full focus:border-indigo-500"
             ref={inputRef}
           />
+          {console.log(language)}
           <div className="w-1/4 mx-2 1sm:w-full 1sm:mx-0 1sm:mt-2">
             <Select
               options={options}
-              onChange={(lang) => setLanguage(lang.value)}
+              onChange={(lang) => setLanguage(lang)}
               value={options[0]}
               required
               className="h-10"
+              value={language}
             />
           </div>
         </div>
@@ -83,7 +88,6 @@ const Home = () => {
             Clear
           </button>
         </div>
-        {console.log(query)}
       </form>
       {formSubmitted && (
         <>
